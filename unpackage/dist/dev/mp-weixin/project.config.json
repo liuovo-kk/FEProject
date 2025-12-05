@@ -9,12 +9,11 @@
     "postcss": false,
     "minified": false,
     "newFeature": true,
-    "bigPackageSizeSupport": true,
-    "minifyWXML": true
+    "bigPackageSizeSupport": true
   },
   "compileType": "miniprogram",
   "libVersion": "",
-  "appid": "touristappid",
+  "appid": "wxb72d5e64802181d8",
   "projectname": "uniProject",
   "condition": {
     "search": {

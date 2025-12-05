@@ -1,0 +1,1 @@
+{"version":3,"file":"issue.js","sources":["../../HBuilderX.4.85.2025110510/HBuilderX/plugins/uniapp-cli-vite/uniPage:/cGFnZXMvaXNzdWUvaXNzdWUudnVl"],"sourcesContent":["import MiniProgramPage from 'D:/HBuilderProject/uniProject/pages/issue/issue.vue'\nwx.createPage(MiniProgramPage)"],"names":[],"mappings":";;;;;;;AACA,GAAG,WAAW,eAAe;"}
