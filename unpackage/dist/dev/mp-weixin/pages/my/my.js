@@ -72,7 +72,7 @@ const _sfc_main = {
     });
     return (_ctx, _cache) => {
       return common_vendor.e({
-        a: common_assets._imports_0$1,
+        a: common_assets._imports_0$2,
         b: common_vendor.o(navigateToModifyPassword),
         c: common_vendor.o(handleLogout),
         d: activeTab.value === "published" ? 1 : "",

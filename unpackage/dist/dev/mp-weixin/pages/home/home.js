@@ -16,7 +16,7 @@ const _sfc_main = {
     };
     return (_ctx, _cache) => {
       return {
-        a: common_assets._imports_0,
+        a: common_assets._imports_0$1,
         b: common_vendor.o(navigateToSearch),
         c: common_vendor.o(($event) => navigateToDetail(1)),
         d: common_vendor.o(($event) => navigateToDetail(2)),
