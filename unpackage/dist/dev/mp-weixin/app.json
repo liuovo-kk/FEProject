@@ -1,8 +1,11 @@
 {
   "pages": [
+    "pages/login/login",
     "pages/home/home",
     "pages/my/my",
-    "pages/issue/issue"
+    "pages/issue/issue",
+    "pages/register/register",
+    "pages/forget-passward/forget-passward"
   ],
   "window": {
     "navigationBarTextStyle": "black",

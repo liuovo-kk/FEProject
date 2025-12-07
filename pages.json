@@ -1,11 +1,11 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		// {
-		// 	"path": "pages/login/login",
-		// 	"style": {
-		// 		"navigationBarTitleText": "登录"
-		// 	}
-		// },
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		},
 
 		{
 			"path": "pages/home/home",
@@ -24,6 +24,18 @@
 			"path": "pages/issue/issue",
 			"style": {
 				"navigationBarTitleText": "发布"
+			}
+		},
+		{
+			"path": "pages/register/register",
+			"style": {
+				"navigationBarTitleText": ""
+			}
+		},
+		{
+			"path": "pages/forget-passward/forget-passward",
+			"style": {
+				"navigationBarTitleText": ""
 			}
 		}
 
