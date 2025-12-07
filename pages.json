@@ -25,12 +25,18 @@
 			"style": {
 				"navigationBarTitleText": "发布"
 			}
+		},
+		{
+			"path": "pages/modify-password/modify-password",
+			"style": {
+				"navigationBarTitleText": "修改密码"
+			}
 		}
 
 	],
 	"tabBar": {
-		// "color": "#55aaff7",
-		// "SelectedColor": "#205bff",
+		"color": "#000000",
+		"selectedColor": "#9E7961",
 		"borderStyle": "black",
 		"list": [{
 				"pagePath": "pages/home/home",

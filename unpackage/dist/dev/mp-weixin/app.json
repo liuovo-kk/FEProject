@@ -2,7 +2,8 @@
   "pages": [
     "pages/home/home",
     "pages/my/my",
-    "pages/issue/issue"
+    "pages/issue/issue",
+    "pages/modify-password/modify-password"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -11,6 +12,8 @@
     "backgroundColor": "#F8F8F8"
   },
   "tabBar": {
+    "color": "#000000",
+    "selectedColor": "#9E7961",
     "borderStyle": "black",
     "list": [
       {
