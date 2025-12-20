@@ -29,7 +29,7 @@ const _sfc_main = {
           formData.images.push(...tempFilePaths);
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/issue/issue.vue:128", "选择图片失败:", err);
+          common_vendor.index.__f__("error", "at pages/issue/issue.vue:106", "选择图片失败:", err);
           common_vendor.index.showToast({
             title: "选择图片失败",
             icon: "none"
@@ -83,7 +83,7 @@ const _sfc_main = {
           tags: selectedTags.value,
           images: formData.images
         };
-        common_vendor.index.__f__("log", "at pages/issue/issue.vue:198", "发布数据:", publishData);
+        common_vendor.index.__f__("log", "at pages/issue/issue.vue:176", "发布数据:", publishData);
         await new Promise((resolve) => setTimeout(resolve, 1500));
         common_vendor.index.hideLoading();
         common_vendor.index.showToast({
@@ -105,7 +105,7 @@ const _sfc_main = {
           title: "发布失败，请重试",
           icon: "none"
         });
-        common_vendor.index.__f__("error", "at pages/issue/issue.vue:228", "发布失败:", error);
+        common_vendor.index.__f__("error", "at pages/issue/issue.vue:206", "发布失败:", error);
       }
     };
     return (_ctx, _cache) => {

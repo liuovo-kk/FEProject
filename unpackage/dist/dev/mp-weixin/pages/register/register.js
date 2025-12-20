@@ -1,8 +1,14 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
+const utils_api = require("../../utils/api.js");
 const _sfc_main = {
   data() {
     return {
+      // form: {
+      // 	username: '',
+      // 	password: '',
+      // 	phone: ''.
+      // }
       avatarUrl: "/static/默认头像.png",
       // 默认头像路径
       username: "",
@@ -15,61 +21,103 @@ const _sfc_main = {
   },
   methods: {
     // 选择头像
-    chooseAvatar() {
-      common_vendor.index.chooseImage({
-        count: 1,
-        // 最多选择一张
-        sizeType: ["compressed"],
-        // 可以指定是原图还是压缩图
-        sourceType: ["album", "camera"],
-        // 可以指定来源是相册还是相机
-        success: (res) => {
-          const tempFilePaths = res.tempFilePaths;
-          if (tempFilePaths.length > 0) {
-            this.avatarUrl = tempFilePaths[0];
-          }
-        },
-        fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/register/register.vue:85", "选择图片失败", err);
-          common_vendor.index.showToast({
-            title: "选择图片失败，请重试",
-            icon: "none"
+    // chooseAvatar() {
+    // 	// 使用 uni.chooseImage API 选择图片
+    // 	uni.chooseImage({
+    // 		count: 1, // 最多选择一张
+    // 		sizeType: ['compressed'], // 可以指定是原图还是压缩图
+    // 		sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机
+    // 		success: (res) => {
+    // 			const tempFilePaths = res.tempFilePaths;
+    // 			if (tempFilePaths.length > 0) {
+    // 				this.avatarUrl = tempFilePaths[0];
+    // 				// 可以在这里调用上传头像的方法
+    // 				// this.uploadAvatar(tempFilePaths[0]);
+    // 			}
+    // 		},
+    // 		fail: (err) => {
+    // 			uni.__f__('error','at pages/register/register.vue:93','选择图片失败', err);
+    // 			uni.showToast({
+    // 				title: '选择图片失败，请重试',
+    // 				icon: 'none'
+    // 			});
+    // 		}
+    // 	});
+    // },
+    // 处理文件输入变化（备选方案，如果需要直接使用 input 方式）
+    // onAvatarChange(e) {
+    // 	const file = e.detail.files[0];
+    // 	if (file) {
+    // 		// 使用 FileReader 读取文件并显示预览
+    // 		const reader = new FileReader();
+    // 		reader.onload = (event) => {
+    // 			this.avatarUrl = event.target.result;
+    // 		};
+    // 		reader.readAsDataURL(file);
+    // 		// 可以在这里调用上传头像的方法
+    // 		// this.uploadAvatar(file);
+    // 	}
+    // },
+    // // 上传头像（模拟上传，实际开发中需要对接后端接口）
+    // uploadAvatar(avatarFile) {
+    // 	this.isUploading = true;
+    // 	// 模拟上传过程，实际开发中使用 uni.uploadFile
+    // 	uni.showLoading({
+    // 		title: '上传中...',
+    // 	});
+    // 	// 假装上传耗时 2 秒
+    // 	setTimeout(() => {
+    // 		uni.hideLoading();
+    // 		this.isUploading = false;
+    // 		uni.showToast({
+    // 			title: '头像上传成功',
+    // 			icon: 'success'
+    // 		});
+    // 	}, 2000);
+    /*
+    // 实际上传示例（需要后端接口支持）
+    uni.uploadFile({
+      url: 'https://your-backend-api.com/upload-avatar', // 替换为后端上传接口
+      filePath: avatarFile.path,
+      name: 'avatar',
+      formData: {
+        'user': 'test'
+      },
+      success: (uploadFileRes) => {
+        const data = JSON.parse(uploadFileRes.data);
+        if (data.success) {
+          uni.showToast({
+            title: '头像上传成功',
+            icon: 'success'
+          });
+          // 保存头像 URL 到服务器，通常会返回新的头像 URL
+          // this.avatarUrl = data.url;
+        } else {
+          uni.showToast({
+            title: data.message || '头像上传失败',
+            icon: 'none'
           });
         }
-      });
-    },
-    // 处理文件输入变化（备选方案，如果需要直接使用 input 方式）
-    onAvatarChange(e) {
-      const file = e.detail.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          this.avatarUrl = event.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    },
-    // 上传头像（模拟上传，实际开发中需要对接后端接口）
-    uploadAvatar(avatarFile) {
-      this.isUploading = true;
-      common_vendor.index.showLoading({
-        title: "上传中..."
-      });
-      setTimeout(() => {
-        common_vendor.index.hideLoading();
-        this.isUploading = false;
-        common_vendor.index.showToast({
-          title: "头像上传成功",
-          icon: "success"
+      },
+      fail: (err) => {
+        uni.__f__('error','at pages/register/register.vue:161','上传失败', err);
+        uni.showToast({
+          title: '头像上传失败',
+          icon: 'none'
         });
-      }, 2e3);
-    },
+      },
+      complete: () => {
+        this.isUploading = false;
+      }
+    });
+    */
+    // },
     // 复选框状态变化
     checkboxChange(e) {
       this.isAgree = e.detail.value.length > 0;
     },
     // 提交注册
-    submitRegister() {
+    async submitRegister() {
       if (!this.isAgree) {
         common_vendor.index.showToast({
           title: "请先同意协议",
@@ -105,41 +153,62 @@ const _sfc_main = {
         });
         return;
       }
-      if (this.avatarUrl !== "/static/默认头像.png") {
-        this.isUploading = true;
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/;
+      if (!passwordRegex.test(this.password)) {
         common_vendor.index.showToast({
-          title: "头像上传中...",
-          icon: "loading"
+          title: "密码格式不正确，需为8-20位且包含大小写字母和数字",
+          icon: "none"
         });
-        setTimeout(() => {
-          this.isUploading = false;
-          this.finalizeRegistration();
-        }, 2e3);
-      } else {
-        this.finalizeRegistration();
+        return;
       }
-    },
-    // 完成注册流程（模拟）
-    finalizeRegistration() {
-      common_vendor.index.showLoading({
-        title: "注册中..."
-      });
-      setTimeout(() => {
-        common_vendor.index.hideLoading();
+      try {
+        const res = await utils_api.register({
+          username: this.username,
+          phone: this.phone,
+          password: this.password
+          // 注意：avatar 和 其它非必填字段暂时不传
+        });
+        common_vendor.index.__f__("log", "at pages/register/register.vue:241", "注册成功：", res);
         common_vendor.index.showToast({
           title: "注册成功",
-          icon: "success",
-          duration: 1500,
-          success: () => {
-            setTimeout(() => {
-              common_vendor.index.navigateTo({
-                url: "/pages/login/login"
-              });
-            }, 1500);
-          }
+          icon: "success"
         });
-      }, 2e3);
+        setTimeout(() => {
+          common_vendor.index.navigateTo({
+            url: "/pages/login/login"
+          });
+        }, 1500);
+      } catch (error) {
+        common_vendor.index.__f__("error", "at pages/register/register.vue:256", "注册失败：", error);
+      }
     },
+    // // 完成注册流程（模拟）
+    // async finalizeRegistration() {
+    // 	// 模拟注册过程，实际开发中使用 uni.request 提交数据到后端
+    // 	uni.showLoading({
+    // 		title: '注册中...'
+    // 	});
+    // 	try {
+    // 		const res = await register(this.form);
+    // 	}
+    // // 假装网络请求，2秒后模拟成功
+    // setTimeout(() => {
+    // 	uni.hideLoading();
+    // 	uni.showToast({
+    // 		title: '注册成功',
+    // 		icon: 'success',
+    // 		duration: 1500,
+    // 		success: () => {
+    // 			// 注册成功后跳转到登录页
+    // 			setTimeout(() => {
+    // 				uni.navigateTo({
+    // 					url: '/pages/login/login'
+    // 				});
+    // 			}, 1500);
+    // 		}
+    // 	});
+    // }, 2000);
+    // },
     // 返回上一页
     goBack() {
       common_vendor.index.navigateBack();
@@ -149,8 +218,8 @@ const _sfc_main = {
 function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
   return {
     a: $data.avatarUrl,
-    b: common_vendor.o((...args) => $options.onAvatarChange && $options.onAvatarChange(...args)),
-    c: common_vendor.o((...args) => $options.chooseAvatar && $options.chooseAvatar(...args)),
+    b: common_vendor.o((...args) => _ctx.onAvatarChange && _ctx.onAvatarChange(...args)),
+    c: common_vendor.o((...args) => _ctx.chooseAvatar && _ctx.chooseAvatar(...args)),
     d: $data.username,
     e: common_vendor.o(($event) => $data.username = $event.detail.value),
     f: $data.phone,

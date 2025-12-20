@@ -1,6 +1,7 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 const common_assets = require("../../common/assets.js");
+const utils_api = require("../../utils/api.js");
 const _sfc_main = {
   __name: "my",
   setup(__props) {
@@ -39,20 +40,37 @@ const _sfc_main = {
         title: "提示",
         content: "确定要退出登录吗？",
         confirmColor: "#DD514C",
-        success: (res) => {
+        success: async (res) => {
           if (res.confirm) {
-            common_vendor.index.removeStorageSync("token");
-            common_vendor.index.removeStorageSync("userInfo");
-            common_vendor.index.showToast({
-              title: "退出成功",
-              icon: "success",
-              duration: 1500
-            });
-            setTimeout(() => {
-              common_vendor.index.reLaunch({
-                url: "/pages/login/login"
+            try {
+              await utils_api.logout();
+              common_vendor.index.removeStorageSync("token");
+              common_vendor.index.removeStorageSync("userInfo");
+              common_vendor.index.showToast({
+                title: "退出成功",
+                icon: "success",
+                duration: 1500
               });
-            }, 1500);
+              setTimeout(() => {
+                common_vendor.index.reLaunch({
+                  url: "/pages/login/login"
+                });
+              }, 1500);
+            } catch (error) {
+              common_vendor.index.__f__("error", "at pages/my/my.vue:170", "退出登录请求失败：", error);
+              common_vendor.index.removeStorageSync("token");
+              common_vendor.index.removeStorageSync("userInfo");
+              common_vendor.index.showToast({
+                title: "退出成功（本地）",
+                icon: "success",
+                duration: 1500
+              });
+              setTimeout(() => {
+                common_vendor.index.reLaunch({
+                  url: "/pages/login/login"
+                });
+              }, 1500);
+            }
           }
         }
       });
@@ -68,11 +86,11 @@ const _sfc_main = {
       });
     };
     common_vendor.onMounted(() => {
-      common_vendor.index.__f__("log", "at pages/my/my.vue:182", "我的页面加载完成");
+      common_vendor.index.__f__("log", "at pages/my/my.vue:209", "我的页面加载完成");
     });
     return (_ctx, _cache) => {
       return common_vendor.e({
-        a: common_assets._imports_0$2,
+        a: common_assets._imports_0$3,
         b: common_vendor.o(navigateToModifyPassword),
         c: common_vendor.o(handleLogout),
         d: activeTab.value === "published" ? 1 : "",
@@ -83,7 +101,7 @@ const _sfc_main = {
       }, activeTab.value === "published" ? common_vendor.e({
         i: publishedList.value.length > 0
       }, publishedList.value.length > 0 ? {
-        j: common_assets._imports_1,
+        j: common_assets._imports_1$2,
         k: common_vendor.o(previewImage)
       } : {}, {
         l: publishedList.value.length === 0
@@ -92,7 +110,7 @@ const _sfc_main = {
       }, activeTab.value === "liked" ? common_vendor.e({
         n: likedList.value.length > 0
       }, likedList.value.length > 0 ? {
-        o: common_assets._imports_2,
+        o: common_assets._imports_2$1,
         p: common_vendor.o(previewLikedImage)
       } : {}, {
         q: likedList.value.length === 0

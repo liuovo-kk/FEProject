@@ -1,0 +1,174 @@
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.search-page.data-v-c10c040c {
+  height: 100vh;
+  background-color: #f5f5f7;
+  /* 浅米色背景 */
+  display: flex;
+  flex-direction: column;
+}
+
+/* 搜索头部 */
+.search-header.data-v-c10c040c {
+  display: flex;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  background-color: #f5f5f7;
+  border-bottom: 2rpx solid #e8e8e8;
+  height: 100rpx;
+  box-sizing: border-box;
+}
+
+/* 搜索框 */
+.search-box.data-v-c10c040c {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 35rpx;
+  padding: 0 20rpx;
+  margin: 0 20rpx;
+  height: 70rpx;
+  border: 1rpx solid #ddd;
+}
+.search-input.data-v-c10c040c {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333;
+  height: 100%;
+}
+.clear-icon.data-v-c10c040c {
+  padding: 8rpx;
+  margin-left: 8rpx;
+  font-size: 24rpx;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 搜索按钮 */
+.search-btn.data-v-c10c040c {
+  font-size: 30rpx;
+  color: #000;
+  font-weight: 400;
+  padding: 0 8rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+  background-color: transparent;
+  border: none;
+}
+
+/* 内容区域 */
+.content-scroll.data-v-c10c040c {
+  flex: 1;
+  padding: 0 30rpx;
+  background-color: #f5f5f7;
+}
+
+/* 分割线 */
+.divider.data-v-c10c040c {
+  height: 1rpx;
+  background-color: #e8e8e8;
+  margin: 10rpx 0 30rpx 0;
+}
+
+/* 区域标题 */
+.section-header.data-v-c10c040c {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 40rpx 0 30rpx 0;
+  padding-bottom: 10rpx;
+}
+.section-title.data-v-c10c040c {
+  font-size: 32rpx;
+  color: #5F371E;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+/* 历史记录列表 */
+.history-list.data-v-c10c040c {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  margin-bottom: 10rpx;
+}
+.history-item.data-v-c10c040c {
+  background-color: #fff;
+  border-radius: 36rpx;
+  padding: 14rpx 28rpx;
+  font-size: 26rpx;
+  color: #666;
+  max-width: calc(50% - 10rpx);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+.icon.data-v-c10c040c {
+  width: 20px;
+  height: 20px;
+  margin-right: 4px;
+}
+
+/* 今日热词网格 */
+.hotwords-list.data-v-c10c040c {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  margin-bottom: 40rpx;
+}
+.hotword-item.data-v-c10c040c {
+  width: calc(40% - 10rpx);
+  background-color: #fff;
+  border-radius: 8rpx;
+  padding: 24rpx 20rpx;
+  font-size: 24rpx;
+  color: #333;
+  border: 1rpx solid #e8e8e8;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+/* 点击效果 */
+.history-item.data-v-c10c040c:active,
+.hotword-item.data-v-c10c040c:active {
+  opacity: 0.7;
+  transform: scale(0.98);
+  transition: all 0.1s ease;
+}
+
+/* 占位符样式 */
+.placeholder-style.data-v-c10c040c {
+  color: #999;
+  font-size: 28rpx;
+}

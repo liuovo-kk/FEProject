@@ -2,7 +2,7 @@
 	<view class="modify-password-container">
 		<!-- 猫咪头像 -->
 		<view class="avatar-section">
-			<image class="cat-avatar" src="/static/cat-avatar.jpg" mode="aspectFill"></image>
+			<image class="cat-avatar" src="/static/默认头像.png" mode="aspectFill"></image>
 		</view>
 
 		<!-- 表单区域 -->
@@ -12,7 +12,9 @@
 				<input class="password-input" :type="showOldPassword ? 'text' : 'password'" v-model="oldPassword"
 					placeholder="请输入旧密码" placeholder-class="placeholder" maxlength="20" />
 				<view class="eye-icon" @tap="togglePasswordVisibility('old')">
-					<text class="eye-text">{{ showOldPassword ? '👁️' : '👁️‍🗨️' }}</text>
+					<image class="eye-image"
+						:src="showOldPassword ? '/static/icons/preview-open.png' : '/static/icons/preview-close.png'"
+						mode="aspectFit"></image>
 				</view>
 			</view>
 
@@ -21,7 +23,9 @@
 				<input class="password-input" :type="showNewPassword ? 'text' : 'password'" v-model="newPassword"
 					placeholder="请输入新密码" placeholder-class="placeholder" maxlength="20" />
 				<view class="eye-icon" @tap="togglePasswordVisibility('new')">
-					<text class="eye-text">{{ showNewPassword ? '👁️' : '👁️‍🗨️' }}</text>
+					<image class="eye-image"
+						:src="showNewPassword ? '/static/icons/preview-open.png' : '/static/icons/preview-close.png'"
+						mode="aspectFit"></image>
 				</view>
 			</view>
 
@@ -30,7 +34,9 @@
 				<input class="password-input" :type="showConfirmPassword ? 'text' : 'password'"
 					v-model="confirmPassword" placeholder="请再次输入新密码" placeholder-class="placeholder" maxlength="20" />
 				<view class="eye-icon" @tap="togglePasswordVisibility('confirm')">
-					<text class="eye-text">{{ showConfirmPassword ? '👁️' : '👁️‍🗨️' }}</text>
+					<image class="eye-image"
+						:src="showConfirmPassword ? '/static/icons/preview-open.png' : '/static/icons/preview-close.png'"
+						mode="aspectFit"></image>
 				</view>
 			</view>
 
@@ -51,10 +57,12 @@
 
 <script setup>
 	import {
+		changePassword
+	} from '@/utils/api.js'
+	import {
 		ref,
 		computed
 	} from 'vue'
-
 	// 密码数据
 	const oldPassword = ref('')
 	const newPassword = ref('')
@@ -85,7 +93,7 @@
 	})
 
 	// 处理修改密码
-	const handleModify = () => {
+	const handleModify = async () => {
 		if (!canSubmit.value) {
 			if (newPassword.value !== confirmPassword.value) {
 				uni.showToast({
@@ -102,31 +110,33 @@
 			}
 			return
 		}
-
-		// 密码长度验证
-		if (newPassword.value.length < 6) {
+		// 强化校验 —— 按照后端要求：新密码 8-20 位，包含大小写字母和数字
+		const newPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/
+		if (!newPasswordRegex.test(newPassword.value)) {
 			uni.showToast({
-				title: '密码长度不能少于6位',
+				title: '新密码必须为8-20位，且包含大小写字母和数字',
 				icon: 'none',
 				duration: 2000
 			})
 			return
 		}
 
-		// 模拟修改密码请求
-		uni.showLoading({
-			title: '修改中...',
-			mask: true
-		})
-
-		setTimeout(() => {
+		try {
+			uni.showLoading({
+				title: '修改中...',
+				mask: true
+			})
+			// 调用修改密码 API
+			await changePassword({
+				oldPassword: oldPassword.value,
+				newPassword: newPassword.value
+			})
 			uni.hideLoading()
 			uni.showToast({
 				title: '密码修改成功',
 				icon: 'success',
 				duration: 2000
 			})
-
 			// 清空表单
 			oldPassword.value = ''
 			newPassword.value = ''
@@ -134,20 +144,23 @@
 
 			// 延迟返回上一页
 			setTimeout(() => {
-				uni.navigateBack()
+				uni.reLaunch({
+					url: '/pages/my/my'
+				})
 			}, 1500)
-		}, 1500)
+		} catch (error) {
+			uni.hideLoading()
+			// 错误已在 request.js 中统一 toast 提示，比如 400, 401, 403 等
+			// 可根据需要在这里额外处理
+			console.error('修改密码失败：', error)
+		}
 	}
 
 	// 处理忘记密码
 	const handleForgotPassword = () => {
-		uni.showModal({
-			title: '忘记密码',
-			content: '请联系客服或管理员重置密码',
-			showCancel: false,
-			confirmText: '知道了',
-			confirmColor: '#9E7961'
-		})
+		uni.navigateTo({
+			url: '/pages/forget-passward/forget-passward'
+		});
 	}
 </script>
 
@@ -220,15 +233,16 @@
 		justify-content: center;
 		border-radius: 50%;
 		transition: all 0.3s;
+		cursor: pointer;
 
 		&:active {
 			background-color: rgba(0, 0, 0, 0.05);
 		}
 	}
 
-	.eye-text {
-		font-size: 36rpx;
-		line-height: 1;
+	.eye-image {
+		width: 40rpx;
+		height: 40rpx;
 	}
 
 	/* 忘记密码按钮 */
@@ -241,7 +255,7 @@
 
 	.forgot-text {
 		font-size: 28rpx;
-		color: #9E7961;
+		color: #5f371e;
 		/* 棕色 */
 		font-weight: 500;
 		padding: 10rpx 20rpx;
@@ -262,8 +276,7 @@
 	.modify-button {
 		width: 100%;
 		height: 90rpx;
-		background-color: #9E7961;
-		/* 棕色 */
+		background-color: #5f371e;
 		border-radius: 16rpx;
 		display: flex;
 		align-items: center;
@@ -272,7 +285,7 @@
 		box-shadow: 0 4rpx 12rpx rgba(158, 121, 97, 0.3);
 
 		&.disabled {
-			background-color: #D4C7BC;
+			background-color: #9b9b9b;
 			box-shadow: none;
 		}
 

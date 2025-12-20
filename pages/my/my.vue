@@ -6,7 +6,7 @@
 			<view class="user-left">
 				<!-- 头像 -->
 				<view class="avatar-section">
-					<image class="avatar" src="/static/avatar.png" mode="aspectFill"></image>
+					<image class="avatar" src="/static/默认头像.png" mode="aspectFill"></image>
 				</view>
 
 				<!-- 昵称和专业信息 -->
@@ -83,6 +83,9 @@
 
 <script setup>
 	import {
+		logout
+	} from '@/utils/api.js';
+	import {
 		ref,
 		reactive,
 		onMounted
@@ -140,24 +143,48 @@
 			title: '提示',
 			content: '确定要退出登录吗？',
 			confirmColor: '#DD514C',
-			success: (res) => {
+			success: async (res) => {
 				if (res.confirm) {
-					// 清除用户登录状态
-					uni.removeStorageSync('token')
-					uni.removeStorageSync('userInfo')
+					try {
+						// 调用后端退出接口
+						await logout(); // 这里会自动带上 token 请求 /api/auth/logout
 
-					uni.showToast({
-						title: '退出成功',
-						icon: 'success',
-						duration: 1500
-					})
+						// 清除本地存储的用户状态
+						uni.removeStorageSync('token');
+						uni.removeStorageSync('userInfo');
 
-					// 跳转到登录页
-					setTimeout(() => {
-						uni.reLaunch({
-							url: '/pages/login/login'
-						})
-					}, 1500)
+						// 提示用户
+						uni.showToast({
+							title: '退出成功',
+							icon: 'success',
+							duration: 1500
+						});
+
+						// 延时跳转到登录页
+						setTimeout(() => {
+							uni.reLaunch({
+								url: '/pages/login/login'
+							});
+						}, 1500);
+					} catch (error) {
+						console.error('退出登录请求失败：', error);
+
+						// 即使后端退出接口调用失败，也继续清理本地状态，保证前端退出
+						uni.removeStorageSync('token');
+						uni.removeStorageSync('userInfo');
+
+						uni.showToast({
+							title: '退出成功（本地）',
+							icon: 'success',
+							duration: 1500
+						});
+
+						setTimeout(() => {
+							uni.reLaunch({
+								url: '/pages/login/login'
+							});
+						}, 1500);
+					}
 				}
 			}
 		})
@@ -239,7 +266,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 20rpx;
-		width: 180rpx;
+		width: 130rpx;
 	}
 
 	.button-item {
@@ -259,19 +286,19 @@
 	}
 
 	.modify-password {
-		background-color: #f0f0f0;
-		color: #333333;
-		border: 1rpx solid #e0e0e0;
+		background-color: #5f371e;
+		color: #fff;
+		// border: 1rpx solid #e0e0e0;
 	}
 
 	.logout {
-		background-color: #f0f0f0;
-		color: black;
+		background-color: #5f371e;
+		color: white;
 
 	}
 
 	.button-text {
-		font-size: 28rpx;
+		font-size: 24rpx;
 		font-weight: 500;
 	}
 

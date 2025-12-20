@@ -1,6 +1,7 @@
 "use strict";
 const common_vendor = require("../../common/vendor.js");
 const common_assets = require("../../common/assets.js");
+const utils_api = require("../../utils/api.js");
 const _sfc_main = {
   __name: "modify-password",
   setup(__props) {
@@ -22,7 +23,7 @@ const _sfc_main = {
     const canSubmit = common_vendor.computed(() => {
       return oldPassword.value.trim() !== "" && newPassword.value.trim() !== "" && confirmPassword.value.trim() !== "" && newPassword.value === confirmPassword.value;
     });
-    const handleModify = () => {
+    const handleModify = async () => {
       if (!canSubmit.value) {
         if (newPassword.value !== confirmPassword.value) {
           common_vendor.index.showToast({
@@ -39,19 +40,24 @@ const _sfc_main = {
         }
         return;
       }
-      if (newPassword.value.length < 6) {
+      const newPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/;
+      if (!newPasswordRegex.test(newPassword.value)) {
         common_vendor.index.showToast({
-          title: "密码长度不能少于6位",
+          title: "新密码必须为8-20位，且包含大小写字母和数字",
           icon: "none",
           duration: 2e3
         });
         return;
       }
-      common_vendor.index.showLoading({
-        title: "修改中...",
-        mask: true
-      });
-      setTimeout(() => {
+      try {
+        common_vendor.index.showLoading({
+          title: "修改中...",
+          mask: true
+        });
+        await utils_api.changePassword({
+          oldPassword: oldPassword.value,
+          newPassword: newPassword.value
+        });
         common_vendor.index.hideLoading();
         common_vendor.index.showToast({
           title: "密码修改成功",
@@ -62,17 +68,18 @@ const _sfc_main = {
         newPassword.value = "";
         confirmPassword.value = "";
         setTimeout(() => {
-          common_vendor.index.navigateBack();
+          common_vendor.index.reLaunch({
+            url: "/pages/my/my"
+          });
         }, 1500);
-      }, 1500);
+      } catch (error) {
+        common_vendor.index.hideLoading();
+        common_vendor.index.__f__("error", "at pages/modify-password/modify-password.vue:155", "修改密码失败：", error);
+      }
     };
     const handleForgotPassword = () => {
-      common_vendor.index.showModal({
-        title: "忘记密码",
-        content: "请联系客服或管理员重置密码",
-        showCancel: false,
-        confirmText: "知道了",
-        confirmColor: "#9E7961"
+      common_vendor.index.navigateTo({
+        url: "/pages/forget-passward/forget-passward"
       });
     };
     return (_ctx, _cache) => {
@@ -81,17 +88,17 @@ const _sfc_main = {
         b: showOldPassword.value ? "text" : "password",
         c: oldPassword.value,
         d: common_vendor.o(($event) => oldPassword.value = $event.detail.value),
-        e: common_vendor.t(showOldPassword.value ? "👁️" : "👁️‍🗨️"),
+        e: showOldPassword.value ? "/static/icons/preview-open.png" : "/static/icons/preview-close.png",
         f: common_vendor.o(($event) => togglePasswordVisibility("old")),
         g: showNewPassword.value ? "text" : "password",
         h: newPassword.value,
         i: common_vendor.o(($event) => newPassword.value = $event.detail.value),
-        j: common_vendor.t(showNewPassword.value ? "👁️" : "👁️‍🗨️"),
+        j: showNewPassword.value ? "/static/icons/preview-open.png" : "/static/icons/preview-close.png",
         k: common_vendor.o(($event) => togglePasswordVisibility("new")),
         l: showConfirmPassword.value ? "text" : "password",
         m: confirmPassword.value,
         n: common_vendor.o(($event) => confirmPassword.value = $event.detail.value),
-        o: common_vendor.t(showConfirmPassword.value ? "👁️" : "👁️‍🗨️"),
+        o: showConfirmPassword.value ? "/static/icons/preview-open.png" : "/static/icons/preview-close.png",
         p: common_vendor.o(($event) => togglePasswordVisibility("confirm")),
         q: common_vendor.o(handleForgotPassword),
         r: !canSubmit.value ? 1 : "",

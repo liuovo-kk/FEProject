@@ -28,6 +28,9 @@
 </template>
 
 <script>
+	import {
+		login
+	} from '@/utils/api.js';
 	export default {
 		data() {
 			return {
@@ -36,19 +39,39 @@
 			};
 		},
 		methods: {
-			handleLogin() {
-				// TODO: 调用 member A 的 auth.js 登录接口
-				console.log('登录：', this.phone, this.password);
-				// 成功后跳转首页或内容列表页
-				if (this.phone && this.password) {
-					uni.switchTab({
-						url: '/pages/home/home'
-					});
-				} else {
+			async handleLogin() {
+				if (!this.phone || !this.password) {
 					uni.showToast({
 						title: '请输入手机号和密码',
 						icon: 'none'
 					});
+					return;
+				}
+
+				try {
+					const res = await login({
+						account: this.phone, // 根据接口文档，可以是手机号或用户名
+						password: this.password
+					});
+
+					// 登录成功，res 即为接口返回的 data（见文档1 登录成功返回示例）
+					console.log('登录成功，用户信息：', res);
+
+					// 保存 token 和用户信息到本地
+					uni.setStorageSync('token', res.token);
+					uni.setStorageSync('userInfo', res.userInfo);
+
+					// 跳转到首页
+					uni.switchTab({
+						url: '/pages/home/home'
+					});
+				} catch (error) {
+					// 错误已在 request.js 中统一提示，这里可根据需要额外处理
+					uni.showToast({
+						title: '登录失败，请检查手机号和密码',
+						icon: 'none'
+					});
+					console.error('登录失败：', error);
 				}
 			},
 			onForgotPassword() {

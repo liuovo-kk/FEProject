@@ -54,9 +54,17 @@
 </template>
 
 <script>
+	import {
+		register
+	} from '@/utils/api.js';
 	export default {
 		data() {
 			return {
+				// form: {
+				// 	username: '',
+				// 	password: '',
+				// 	phone: ''.
+				// }
 				avatarUrl: '/static/默认头像.png', // 默认头像路径
 				username: '',
 				phone: '',
@@ -67,101 +75,101 @@
 		},
 		methods: {
 			// 选择头像
-			chooseAvatar() {
-				// 使用 uni.chooseImage API 选择图片
-				uni.chooseImage({
-					count: 1, // 最多选择一张
-					sizeType: ['compressed'], // 可以指定是原图还是压缩图
-					sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机
-					success: (res) => {
-						const tempFilePaths = res.tempFilePaths;
-						if (tempFilePaths.length > 0) {
-							this.avatarUrl = tempFilePaths[0];
-							// 可以在这里调用上传头像的方法
-							// this.uploadAvatar(tempFilePaths[0]);
-						}
-					},
-					fail: (err) => {
-						console.error('选择图片失败', err);
-						uni.showToast({
-							title: '选择图片失败，请重试',
-							icon: 'none'
-						});
-					}
-				});
-			},
+			// chooseAvatar() {
+			// 	// 使用 uni.chooseImage API 选择图片
+			// 	uni.chooseImage({
+			// 		count: 1, // 最多选择一张
+			// 		sizeType: ['compressed'], // 可以指定是原图还是压缩图
+			// 		sourceType: ['album', 'camera'], // 可以指定来源是相册还是相机
+			// 		success: (res) => {
+			// 			const tempFilePaths = res.tempFilePaths;
+			// 			if (tempFilePaths.length > 0) {
+			// 				this.avatarUrl = tempFilePaths[0];
+			// 				// 可以在这里调用上传头像的方法
+			// 				// this.uploadAvatar(tempFilePaths[0]);
+			// 			}
+			// 		},
+			// 		fail: (err) => {
+			// 			console.error('选择图片失败', err);
+			// 			uni.showToast({
+			// 				title: '选择图片失败，请重试',
+			// 				icon: 'none'
+			// 			});
+			// 		}
+			// 	});
+			// },
 
 			// 处理文件输入变化（备选方案，如果需要直接使用 input 方式）
-			onAvatarChange(e) {
-				const file = e.detail.files[0];
-				if (file) {
-					// 使用 FileReader 读取文件并显示预览
-					const reader = new FileReader();
-					reader.onload = (event) => {
-						this.avatarUrl = event.target.result;
-					};
-					reader.readAsDataURL(file);
-					// 可以在这里调用上传头像的方法
-					// this.uploadAvatar(file);
-				}
-			},
+			// onAvatarChange(e) {
+			// 	const file = e.detail.files[0];
+			// 	if (file) {
+			// 		// 使用 FileReader 读取文件并显示预览
+			// 		const reader = new FileReader();
+			// 		reader.onload = (event) => {
+			// 			this.avatarUrl = event.target.result;
+			// 		};
+			// 		reader.readAsDataURL(file);
+			// 		// 可以在这里调用上传头像的方法
+			// 		// this.uploadAvatar(file);
+			// 	}
+			// },
 
-			// 上传头像（模拟上传，实际开发中需要对接后端接口）
-			uploadAvatar(avatarFile) {
-				this.isUploading = true;
-				// 模拟上传过程，实际开发中使用 uni.uploadFile
-				uni.showLoading({
-					title: '上传中...',
-				});
+			// // 上传头像（模拟上传，实际开发中需要对接后端接口）
+			// uploadAvatar(avatarFile) {
+			// 	this.isUploading = true;
+			// 	// 模拟上传过程，实际开发中使用 uni.uploadFile
+			// 	uni.showLoading({
+			// 		title: '上传中...',
+			// 	});
 
-				// 假装上传耗时 2 秒
-				setTimeout(() => {
-					uni.hideLoading();
-					this.isUploading = false;
-					uni.showToast({
-						title: '头像上传成功',
-						icon: 'success'
-					});
-				}, 2000);
+			// 	// 假装上传耗时 2 秒
+			// 	setTimeout(() => {
+			// 		uni.hideLoading();
+			// 		this.isUploading = false;
+			// 		uni.showToast({
+			// 			title: '头像上传成功',
+			// 			icon: 'success'
+			// 		});
+			// 	}, 2000);
 
-				/*
-				// 实际上传示例（需要后端接口支持）
-				uni.uploadFile({
-				  url: 'https://your-backend-api.com/upload-avatar', // 替换为你的后端上传接口
-				  filePath: avatarFile.path,
-				  name: 'avatar',
-				  formData: {
-				    'user': 'test'
-				  },
-				  success: (uploadFileRes) => {
-				    const data = JSON.parse(uploadFileRes.data);
-				    if (data.success) {
-				      uni.showToast({
-				        title: '头像上传成功',
-				        icon: 'success'
-				      });
-				      // 保存头像 URL 到服务器，通常会返回新的头像 URL
-				      // this.avatarUrl = data.url;
-				    } else {
-				      uni.showToast({
-				        title: data.message || '头像上传失败',
-				        icon: 'none'
-				      });
-				    }
-				  },
-				  fail: (err) => {
-				    console.error('上传失败', err);
-				    uni.showToast({
-				      title: '头像上传失败',
-				      icon: 'none'
-				    });
-				  },
-				  complete: () => {
-				    this.isUploading = false;
-				  }
-				});
-				*/
-			},
+			/*
+			// 实际上传示例（需要后端接口支持）
+			uni.uploadFile({
+			  url: 'https://your-backend-api.com/upload-avatar', // 替换为后端上传接口
+			  filePath: avatarFile.path,
+			  name: 'avatar',
+			  formData: {
+			    'user': 'test'
+			  },
+			  success: (uploadFileRes) => {
+			    const data = JSON.parse(uploadFileRes.data);
+			    if (data.success) {
+			      uni.showToast({
+			        title: '头像上传成功',
+			        icon: 'success'
+			      });
+			      // 保存头像 URL 到服务器，通常会返回新的头像 URL
+			      // this.avatarUrl = data.url;
+			    } else {
+			      uni.showToast({
+			        title: data.message || '头像上传失败',
+			        icon: 'none'
+			      });
+			    }
+			  },
+			  fail: (err) => {
+			    console.error('上传失败', err);
+			    uni.showToast({
+			      title: '头像上传失败',
+			      icon: 'none'
+			    });
+			  },
+			  complete: () => {
+			    this.isUploading = false;
+			  }
+			});
+			*/
+			// },
 
 			// 复选框状态变化
 			checkboxChange(e) {
@@ -169,7 +177,7 @@
 			},
 
 			// 提交注册
-			submitRegister() {
+			async submitRegister() {
 				if (!this.isAgree) {
 					uni.showToast({
 						title: '请先同意协议',
@@ -210,61 +218,99 @@
 					});
 					return;
 				}
+				// 检查密码格式：8-20位，且包含大写字母、小写字母和数字
+				const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$/;
+				if (!passwordRegex.test(this.password)) {
+					uni.showToast({
+						title: '密码格式不正确，需为8-20位且包含大小写字母和数字',
+						icon: 'none'
+					});
+					return;
+				}
 
+				try {
+					// 2. 调用注册接口，只传 username、phone、password
+					const res = await register({
+						username: this.username,
+						phone: this.phone,
+						password: this.password,
+						// 注意：avatar 和 其它非必填字段暂时不传
+					});
+
+					// 3. 注册成功
+					console.log('注册成功：', res);
+					uni.showToast({
+						title: '注册成功',
+						icon: 'success'
+					});
+
+					// 4. 跳转到登录页
+					setTimeout(() => {
+						uni.navigateTo({
+							url: '/pages/login/login'
+						});
+					}, 1500);
+
+				} catch (error) {
+					// 5. 错误提示已由 utils/request.js 自动处理（如 toast 弹出）
+					console.error('注册失败：', error);
+				}
 				// 如果头像未上传，可以选择上传头像或者暂存头像路径
 				// 这里假设头像已经上传，avatarUrl 是服务器返回的头像 URL
 				// 如果头像未上传，可以在这里调用上传头像的方法
-				if (this.avatarUrl !== '/static/默认头像.png') {
-					// 调用上传头像方法
-					// this.uploadAvatar(this.avatarFile);
-					// 为了演示，我们假设上传已经完成
-					this.isUploading = true;
-					uni.showToast({
-						title: '头像上传中...',
-						icon: 'loading'
-					});
-					setTimeout(() => {
-						this.isUploading = false;
-						// 假设上传成功，继续注册流程
-						this.finalizeRegistration();
-					}, 2000);
-				} else {
-					// 使用默认头像，继续注册流程
-					this.finalizeRegistration();
-				}
+				// if (this.avatarUrl !== '/static/默认头像.png') {
+				// 	// 调用上传头像方法
+				// 	// this.uploadAvatar(this.avatarFile);
+				// 	// 为了演示，我们假设上传已经完成
+				// 	this.isUploading = true;
+				// 	uni.showToast({
+				// 		title: '头像上传中...',
+				// 		icon: 'loading'
+				// 	});
+				// 	setTimeout(() => {
+				// 		this.isUploading = false;
+				// 		// 假设上传成功，继续注册流程
+				// 		this.finalizeRegistration();
+				// 	}, 2000);
+				// } else {
+				// 	// 使用默认头像，继续注册流程
+				// 	this.finalizeRegistration();
+				// }
 			},
 
-			// 完成注册流程（模拟）
-			finalizeRegistration() {
-				// 模拟注册过程，实际开发中使用 uni.request 提交数据到后端
-				uni.showLoading({
-					title: '注册中...'
-				});
-
-				// 假装网络请求，2秒后模拟成功
-				setTimeout(() => {
-					uni.hideLoading();
-					uni.showToast({
-						title: '注册成功',
-						icon: 'success',
-						duration: 1500,
-						success: () => {
-							// 注册成功后跳转到登录页
-							setTimeout(() => {
-								uni.navigateTo({
-									url: '/pages/login/login'
-								});
-							}, 1500);
-						}
-					});
-				}, 2000);
-			},
+			// // 完成注册流程（模拟）
+			// async finalizeRegistration() {
+			// 	// 模拟注册过程，实际开发中使用 uni.request 提交数据到后端
+			// 	uni.showLoading({
+			// 		title: '注册中...'
+			// 	});
+			// 	try {
+			// 		const res = await register(this.form);
+			// 	}
+			// // 假装网络请求，2秒后模拟成功
+			// setTimeout(() => {
+			// 	uni.hideLoading();
+			// 	uni.showToast({
+			// 		title: '注册成功',
+			// 		icon: 'success',
+			// 		duration: 1500,
+			// 		success: () => {
+			// 			// 注册成功后跳转到登录页
+			// 			setTimeout(() => {
+			// 				uni.navigateTo({
+			// 					url: '/pages/login/login'
+			// 				});
+			// 			}, 1500);
+			// 		}
+			// 	});
+			// }, 2000);
+			// },
 
 			// 返回上一页
 			goBack() {
 				uni.navigateBack();
 			}
-		}
+		},
 	}
 </script>
 
